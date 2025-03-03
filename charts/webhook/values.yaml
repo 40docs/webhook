@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/amerintlxperts/webhook
+  tag: "latest"
+  pullPolicy: Always
+service:
+  type: ClusterIP
+  port: 8080
+replicaCount: 2
+tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+nodeSelector:
+  system-pool: "true"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: "system-pool"
+              operator: "In"
+              values:
+                - "true"

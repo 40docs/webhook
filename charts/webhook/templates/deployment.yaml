@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook
+  labels:
+    app.kubernetes.io/name: webhook-instance
+    app.kubernetes.io/instance: webhook
+spec:
+  replicas: {{.Values.replicaCount}}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: webhook-instance
+      app.kubernetes.io/instance: webhook
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: webhook-instance
+        app.kubernetes.io/instance: webhook
+    spec:
+      containers:
+        - name: webhook-instance
+          image: "{{.Values.image.repository}}:{{.Values.image.tag}}"
+          imagePullPolicy: {{.Values.image.pullPolicy}}
+          ports:
+            - containerPort: 8080
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8}}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8}}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8}}
